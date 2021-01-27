@@ -9,30 +9,26 @@ pipeline {
                 '''
             }
         }
-        stage('unit test') {
-            // agent any
-            // agent {
-            //     docker {
-            //         image 'node:alpine3.12'
-            //     }
-            // }
-            steps {
-                // echo 'run unit tests using Docker container base image'   
-                // sh 'ls -l'
-                // sh '$(npm bin)/jest --help'
-                sh 'npm install'             
-                sh 'npm test'
-            }
-        }
+        // stage('unit test') {
+        //     steps {
+        //         sh 'npm install'             
+        //         sh 'npm test'
+        //     }
+        // }
         stage('integration test') {
             steps {
-                echo 'run integartion tests with Docker compose'
+                echo 'run integration tests with Docker compose'
+                sh '''
+                    docker-compose -f test-integration.yml up -d
+                    docker wait test-integration
+                '''
             }
         }
     }
     post {
         always {
             echo 'clean resources'
+            sh 'docker-compose -f test-integration.yml down --rmi all -v'
             cleanWs()
         }
     }
