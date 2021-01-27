@@ -9,12 +9,12 @@ pipeline {
                 '''
             }
         }
-        // stage('unit test') {
-        //     steps {
-        //         sh 'npm install'             
-        //         sh 'npm test'
-        //     }
-        // }
+        stage('unit test') {
+            steps {
+                sh 'npm install'             
+                sh 'npm test'
+            }
+        }
         stage('integration test') {
             steps {
                 echo 'run integration tests with Docker compose'
@@ -23,7 +23,7 @@ pipeline {
                     def status = sh(script: 'docker wait test-integration', returnStdout: true)
                     if (status != 0) {
                         throw new Exception(
-                            "Integration tests failed you can debug complete output by removing d flag in previous script"
+                            "Integration tests failed you can debug complete output by removing d flag on docker-compose"
                         )
                     }
                 }
