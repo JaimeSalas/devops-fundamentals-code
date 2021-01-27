@@ -18,10 +18,9 @@ pipeline {
         stage('integration test') {
             steps {
                 echo 'run integration tests with Docker compose'
-                sh '''
-                    docker-compose -f test-integration.yml up -d
-                    docker wait test-integration
-                '''
+                sh 'docker-compose -f test-integration.yml up -d'
+                def result = sh(script: 'docker wait test-integration', returnStdout: true)
+                println result
             }
         }
     }
