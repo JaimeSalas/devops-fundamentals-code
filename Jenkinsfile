@@ -20,8 +20,12 @@ pipeline {
                 echo 'run integration tests with Docker compose'
                 sh 'docker-compose -f test-integration.yml up -d'
                 script {
-                    def result = sh(script: 'docker wait test-integration', returnStdout: true)
-                    println result
+                    def status = sh(script: 'docker wait test-integration', returnStdout: true)
+                    if (status != 0) {
+                        throw new Exception(
+                            "Integration tests failed you can debug complete output by removing d flag in previous script"
+                        )
+                    }
                 }
             }
         }
