@@ -19,8 +19,10 @@ pipeline {
             steps {
                 echo 'run integration tests with Docker compose'
                 sh 'docker-compose -f test-integration.yml up -d'
-                RESULT = sh(script: 'docker wait test-integration', returnStdout: true)
-                echo "$RESULT"
+                script {
+                    def result = sh(script: 'docker wait test-integration', returnStdout: true)
+                    println result
+                }
             }
         }
     }
